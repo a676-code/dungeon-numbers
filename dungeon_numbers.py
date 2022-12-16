@@ -1,7 +1,3 @@
-import sys
-
-sys.path.append("C:\\Users\\\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages")
-
 import numpy as np
 
 def base(a, b):
