@@ -9,7 +9,7 @@ def base(a, b):
     return result
 
 def dungeonNumber(*args, mode='b'):
-    if mode == 'b':
+    if mode == 'b': # bottom-up
         num = base(args[len(args) - 2], args[len(args) - 1])
         args = list(args)
         if (args):
@@ -19,7 +19,7 @@ def dungeonNumber(*args, mode='b'):
                 return dungeonNumber(*tuple(args), num, mode='b')
             else:
                 return num
-    elif mode == 't':
+    elif mode == 't': # top-down
         if len(args) == 1:
             return args[0]
         else:
