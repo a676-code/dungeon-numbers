@@ -4,6 +4,8 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+# computes a base b
+# input: two numbers, integer or decimal
 def base(a, b):
     result = 0
     ls = []
@@ -29,6 +31,8 @@ def base(a, b):
             result += d * (b ** i)
     return result
 
+# Computes a dungeon number
+# input: either a sequence of individual numbers or a list of numbers, integer or decimal
 def dungeonNumber(*args, mode='b'):
     if isinstance(args[0], list): # input is a list
         numbers = args[0].copy()
@@ -121,6 +125,7 @@ for i in range(9):
         print(", ", end="")
 print()
 
+# Scatterplots of the Golden Ratio
 onepointone = []
 sequence = []
 n = 10
