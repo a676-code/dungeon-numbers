@@ -1,39 +1,64 @@
+import math
 import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 def base(a, b):
     result = 0
-    digits_backward = [int(d) for d in str(a)]
+    ls = []
+    counter = 0
+    countPlaces = False
+    for char in str(a):
+        if char != '.':
+            ls.append(char)
+        else:
+            countPlaces = True
+        if countPlaces:
+            counter -= 1
+    counter += 1
+    digits_backward = [int(d) for d in ls]
     digits = np.flip(digits_backward)
-    for i, d in enumerate(digits):
-        result += d * (int(b) ** i)
+    if countPlaces:
+        i = counter
+        for d in digits:
+            result += d * (b ** i)
+            i += 1
+    else:
+        for i, d in enumerate(digits):
+            result += d * (b ** i)
     return result
 
 def dungeonNumber(*args, mode='b'):
-    if isinstance(args[0], list):
-        if mode == 'b': # bottom-up
-            num = base(args[0][len(args[0]) - 2], args[0][len(args[0]) - 1])
-            if (args[0]):
-                args[0].pop(len(args[0]) - 1)
-            if (len(args[0]) > 1):
-                args[0].pop(len(args[0]) - 1)
-                return dungeonNumber(*tuple(args[0]), num, mode='b')
+    if isinstance(args[0], list): # input is a list
+        numbers = args[0].copy()
+        if numbers:
+            if mode == 'b': # bottom-up
+                num = base(numbers[len(numbers) - 2], numbers[len(numbers) - 1])
+                if (numbers):
+                    numbers.pop(len(numbers) - 1)
+                if (len(numbers) > 1):
+                    numbers.pop(len(numbers) - 1)
+                    return dungeonNumber(*tuple(numbers), num, mode='b')
+                else:
+                    return num
+            elif mode == 't': # top-down
+                if len(numbers) == 1:
+                    return numbers[0]
+                else:
+                    num = base(numbers[0], numbers[1])
+                    if (numbers):
+                        numbers.pop(0)
+                        if (len(numbers) > 1):
+                            numbers.pop(0)
+                            return dungeonNumber(num, *tuple(numbers), mode='t')
+                        else:
+                            return num
             else:
-                return num
-        elif mode == 't': # top-down
-            if len(args[0]) == 1:
-                return args[0][0]
-            else:
-                num = base(args[0][0], args[0][1])
-                if (args[0]):
-                    args[0].pop(0)
-                    if (len(args[0]) > 1):
-                        args[0].pop(0)
-                        return dungeonNumber(num, *tuple(args[0]), mode='t')
-                    else:
-                        return num
+                print("ERROR: unknown mode specified")
         else:
-            print("ERROR: unknown mode specified")
-    else:
+            print("Error: list must be nonempty")
+    else: # input is a sequence of individual integers
         if mode == 'b': # bottom-up
             num = base(args[len(args) - 2], args[len(args) - 1])
             args = list(args)
@@ -60,42 +85,66 @@ def dungeonNumber(*args, mode='b'):
         else:
             print("ERROR: unknown mode specified")
 
-print(dungeonNumber(10), end=', ') # 10
-print(dungeonNumber(10, 11), end=', ') # 11
-print(dungeonNumber(10, 11, 12), end=', ') # 13
-print(dungeonNumber(10, 11, 12, 13), end=', ') # 16
-print(dungeonNumber(10, 11, 12, 13, 14), end=', ') # 20
-print(dungeonNumber(10, 11, 12, 13, 14, 15), end=', ') # 25
-print(dungeonNumber(10, 11, 12, 13, 14, 15, 16), end=', ') # 31
-print(dungeonNumber(10, 11, 12, 13, 14, 15, 16, 17), end=', ') # 38
-print(dungeonNumber(10, 11, 12, 13, 14, 15, 16, 17, 18)) # 46
+# 10, 11, 13, 16, 20, 25, 31, 38, 46
+numbers = [10]
+for i in range(9):
+    print(dungeonNumber(numbers.copy()), end="")
+    numbers.append(numbers[len(numbers) - 1] + 1)
+    if i < 8:
+        print(", ", end="")
+print()
 
-print(dungeonNumber(10), end=', ') # 10
-print(dungeonNumber(11, 10), end=', ') # 11
-print(dungeonNumber(12, 11, 10), end=', ') # 13
-print(dungeonNumber(13, 12, 11, 10), end=', ') # 16
-print(dungeonNumber(14, 13, 12, 11, 10), end=', ') # 20
-print(dungeonNumber(15, 14, 13, 12, 11, 10), end=', ') # 25
-print(dungeonNumber(16, 15, 14, 13, 12, 11, 10), end=', ') # 31
-print(dungeonNumber(17, 16, 15, 14, 13, 12, 11, 10), end=', ') # 38
-print(dungeonNumber(18, 17, 16, 15, 14, 13, 12, 11, 10)) # 46
+# 10, 11, 13, 16, 20, 25, 31, 38, 46
+numbers = [10]
+for i in range(9):
+    print(dungeonNumber(numbers.copy()), end="")
+    numbers.insert(0, numbers[0] + 1)
+    if i < 8:
+        print(", ", end="")
+print()
 
-print(dungeonNumber(10, mode='t'), end=', ') # 10
-print(dungeonNumber(10, 11, mode='t'), end=', ') # 11
-print(dungeonNumber(10, 11, 12, mode='t'), end=', ') # 13
-print(dungeonNumber(10, 11, 12, 13, mode='t'), end=', ') # 16
-print(dungeonNumber(10, 11, 12, 13, 14, mode='t'), end=', ') # 20 
-print(dungeonNumber(10, 11, 12, 13, 14, 15, mode='t'), end=', ') # 30
-print(dungeonNumber(10, 11, 12, 13, 14, 15, 16, mode='t'), end=', ') # 48
-print(dungeonNumber(10, 11, 12, 13, 14, 15, 16, 17, mode='t'), end=', ') # 76
-print(dungeonNumber(10, 11, 12, 13, 14, 15, 16, 17, 18, mode='t')) # 132
+# 10, 11, 13, 16, 20, 30, 48, 76, 132
+numbers = [10]
+for i in range(9):
+    print(dungeonNumber(numbers.copy(), mode='t'), end="")
+    numbers.append(numbers[len(numbers) - 1] + 1)
+    if i < 8:
+        print(", ", end="")
+print()
 
-print(dungeonNumber(10, mode='t'), end=', ') # 10
-print(dungeonNumber(11, 10, mode='t'), end=', ') # 11
-print(dungeonNumber(12, 11, 10, mode='t'), end=', ') # 13
-print(dungeonNumber(13, 12, 11, 10, mode='t'), end=', ') # 16
-print(dungeonNumber(14, 13, 12, 11, 10, mode='t'), end=', ') # 20
-print(dungeonNumber(15, 14, 13, 12, 11, 10, mode='t'), end=', ') # 28
-print(dungeonNumber(16, 15, 14, 13, 12, 11, 10, mode='t'), end=', ') # 45
-print(dungeonNumber(17, 16, 15, 14, 13, 12, 11, 10, mode='t'), end=', ') # 73
-print(dungeonNumber(18, 17, 16, 15, 14, 13, 12, 11, 10, mode='t')) # 133
+# 10, 11, 13, 16, 20, 28, 45, 73, 133
+numbers = [10]
+for i in range(9):
+    print(dungeonNumber(numbers.copy(), mode="t"), end="")
+    numbers.insert(0, numbers[0] + 1)
+    if i < 8:
+        print(", ", end="")
+print()
+
+onepointone = []
+sequence = []
+n = 10
+for i in range(n):
+    onepointone.append(1.1)
+    sequence.append(dungeonNumber(onepointone))
+    
+df = pd.DataFrame(sequence, columns=["Number"])
+indices = [i for i in range(n)]
+df['index'] = indices
+sns.scatterplot(x="index", y="Number", data=df)
+plt.show()
+
+onepointone = []
+sequence = []
+n = 50
+for i in range(n):
+    onepointone.append(1.1)
+    sequence.append(dungeonNumber(onepointone))
+    
+print(sequence[len(sequence) - 1])
+    
+df = pd.DataFrame(sequence, columns=["Number"])
+indices = [i for i in range(n)]
+df['index'] = indices
+sns.scatterplot(x="index", y="Number", data=df)
+plt.show()
