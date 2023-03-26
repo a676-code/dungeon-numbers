@@ -9,31 +9,56 @@ def base(a, b):
     return result
 
 def dungeonNumber(*args, mode='b'):
-    if mode == 'b': # bottom-up
-        num = base(args[len(args) - 2], args[len(args) - 1])
-        args = list(args)
-        if (args):
-            args.pop(len(args) - 1)
-            if (len(args) > 1):
-                args.pop(len(args) - 1)
-                return dungeonNumber(*tuple(args), num, mode='b')
+    if isinstance(args[0], list):
+        if mode == 'b': # bottom-up
+            num = base(args[0][len(args[0]) - 2], args[0][len(args[0]) - 1])
+            if (args[0]):
+                args[0].pop(len(args[0]) - 1)
+            if (len(args[0]) > 1):
+                args[0].pop(len(args[0]) - 1)
+                return dungeonNumber(*tuple(args[0]), num, mode='b')
             else:
                 return num
-    elif mode == 't': # top-down
-        if len(args) == 1:
-            return args[0]
+        elif mode == 't': # top-down
+            if len(args[0]) == 1:
+                return args[0][0]
+            else:
+                num = base(args[0][0], args[0][1])
+                if (args[0]):
+                    args[0].pop(0)
+                    if (len(args[0]) > 1):
+                        args[0].pop(0)
+                        return dungeonNumber(num, *tuple(args[0]), mode='t')
+                    else:
+                        return num
         else:
-            num = base(args[0], args[1])
+            print("ERROR: unknown mode specified")
+    else:
+        if mode == 'b': # bottom-up
+            num = base(args[len(args) - 2], args[len(args) - 1])
             args = list(args)
             if (args):
-                args.pop(0)
+                args.pop(len(args) - 1)
                 if (len(args) > 1):
-                    args.pop(0)
-                    return dungeonNumber(num, *tuple(args), mode='t')
+                    args.pop(len(args) - 1)
+                    return dungeonNumber(*tuple(args), num, mode='b')
                 else:
                     return num
-    else:
-        print("ERROR: unknown mode specified")
+        elif mode == 't': # top-down
+            if len(args) == 1:
+                return args[0]
+            else:
+                num = base(args[0], args[1])
+                args = list(args)
+                if (args):
+                    args.pop(0)
+                    if (len(args) > 1):
+                        args.pop(0)
+                        return dungeonNumber(num, *tuple(args), mode='t')
+                    else:
+                        return num
+        else:
+            print("ERROR: unknown mode specified")
 
 print(dungeonNumber(10), end=', ') # 10
 print(dungeonNumber(10, 11), end=', ') # 11
