@@ -1,3 +1,8 @@
+# dungeon_numbers.py
+# Andrew Lounsbury
+# 26/3/23
+# Purpose: compute dungeon numbers; https://www.youtube.com/watch?v=xNx3JxRhnZE; https://www.youtube.com/watch?v=HFeKdMf01rQ
+
 import math
 import numpy as np
 import pandas as pd
