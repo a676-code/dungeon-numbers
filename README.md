@@ -13,6 +13,7 @@ The sequences computed in the Numberphile and as the output of this script are a
 When we compute the `dungeonNumber` of a list of $n$ 1.1's as $n \to \infty$, we see that the value approaches the Golden Ratio 1.618033988749895 rather quickly. 
 
 A scatterplot of 10 values
-![10](10.png) \
+![10](10.png)
+
 A scatterplot of 50 values
 ![50](50.png)
