@@ -142,6 +142,7 @@ df = pd.DataFrame(sequence, columns=["Number"])
 indices = [i for i in range(n)]
 df['index'] = indices
 sns.scatterplot(x="index", y="Number", data=df)
+plt.savefig("images/10.png")
 plt.show()
 
 onepointone = []
@@ -157,4 +158,5 @@ df = pd.DataFrame(sequence, columns=["Number"])
 indices = [i for i in range(n)]
 df['index'] = indices
 sns.scatterplot(x="index", y="Number", data=df)
+plt.savefig("images/50.png")
 plt.show()
